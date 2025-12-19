@@ -1,0 +1,11 @@
+frontend/node_modules
+**/node_modules
+frontend/dist
+frontend/.vite
+target
+**/target
+.idea
+.vscode
+.git
+.DS_Store
+*.log

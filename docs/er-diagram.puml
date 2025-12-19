@@ -1,0 +1,83 @@
+@startuml Admin Zone ER Diagram
+
+!define TABLE(name) entity name << (T, #FFAAAA) >>
+!define PRIMARY_KEY(x) <b><u>x</u></b>
+!define FOREIGN_KEY(x) <i>x</i>
+
+skinparam linetype ortho
+skinparam entity {
+    BackgroundColor LightYellow
+    BorderColor Black
+}
+
+TABLE(users) {
+    PRIMARY_KEY(username) : VARCHAR(50)
+    password : VARCHAR(255)
+    enabled : BOOLEAN
+}
+
+TABLE(authorities) {
+    PRIMARY_KEY(id) : BIGINT
+    FOREIGN_KEY(username) : VARCHAR(50)
+    authority : VARCHAR(50)
+}
+
+TABLE(students) {
+    PRIMARY_KEY(id) : BIGINT
+    nume : VARCHAR(100)
+    prenume : VARCHAR(100)
+    email : VARCHAR(255)
+    telefon : VARCHAR(20)
+    an_studiu : INT
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+TABLE(courses) {
+    PRIMARY_KEY(id) : BIGINT
+    denumire : VARCHAR(255)
+    profesor_titular : VARCHAR(255)
+    nr_credite : INT
+    semester : INT
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+TABLE(enrollments) {
+    PRIMARY_KEY(FOREIGN_KEY(student_id)) : BIGINT
+    PRIMARY_KEY(FOREIGN_KEY(course_id)) : BIGINT
+    nota_finala : DECIMAL(4,2)
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+TABLE(attendances) {
+    PRIMARY_KEY(id) : BIGINT
+    FOREIGN_KEY(student_id) : BIGINT
+    FOREIGN_KEY(course_id) : BIGINT
+    data : DATE
+    semester : INT
+    status : VARCHAR(20)
+    created_at : TIMESTAMP
+    updated_at : TIMESTAMP
+}
+
+TABLE(audit_log) {
+    PRIMARY_KEY(id) : BIGINT
+    FOREIGN_KEY(username) : VARCHAR(50)
+    ip : VARCHAR(45)
+    action : VARCHAR(50)
+    entity : VARCHAR(100)
+    entity_id : BIGINT
+    payload_json : TEXT
+    timestamp : TIMESTAMP
+}
+
+users ||--o{ authorities : "has"
+users ||--o{ audit_log : "logged by"
+students ||--o{ enrollments : "enrolled in"
+courses ||--o{ enrollments : "has"
+students ||--o{ attendances : "attends"
+courses ||--o{ attendances : "for"
+
+@enduml

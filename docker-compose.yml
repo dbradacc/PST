@@ -1,0 +1,83 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: adminzone-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: adminzone
+      MYSQL_USER: adminzone
+      MYSQL_PASSWORD: adminzone123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - adminzone-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: adminzone-api
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: adminzone
+      MYSQL_USER: adminzone
+      MYSQL_PASSWORD: adminzone123
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - adminzone-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  php:
+    image: php:8.2-fpm-alpine
+    container_name: adminzone-php
+    restart: unless-stopped
+    volumes:
+      - ./:/srv/app
+    networks:
+      - adminzone-network
+
+  caddy:
+    image: caddy:2
+    container_name: adminzone-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./:/srv/app:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+      - php
+    networks:
+      - adminzone-network
+
+networks:
+  adminzone-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  caddy_data:
+  caddy_config:

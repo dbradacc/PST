@@ -1,0 +1,14 @@
+proiect.bradac.ro {
+
+  # Rulează DOAR fișierele .php din /home/ubuntu/app (montat ca /srv/app)
+  @php path *.php
+  handle @php {
+    root * /srv/app
+    php_fastcgi php:9000
+  }
+
+  # Tot restul traficului merge către Spring Boot (React UI + /api/**)
+  handle {
+    reverse_proxy api:8080
+  }
+}

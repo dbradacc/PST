@@ -1,0 +1,17 @@
+package com.adminzone.repository;
+
+import com.adminzone.entity.AuditLog;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
+
+    Page<AuditLog> findByUsernameOrderByTimestampDesc(String username, Pageable pageable);
+
+    Page<AuditLog> findByEntityAndEntityIdOrderByTimestampDesc(String entity, Long entityId, Pageable pageable);
+
+    Page<AuditLog> findAllByOrderByTimestampDesc(Pageable pageable);
+}

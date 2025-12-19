@@ -1,0 +1,590 @@
+{
+    "info": {
+        "name": "Admin Zone API",
+        "description": "Student Management System REST API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "username",
+                                    "value": "admin"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "password123"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Current User",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/me",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "me"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/logout",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "logout"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Students",
+            "item": [
+                {
+                    "name": "List Students",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students?page=0&size=20",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "0"
+                                },
+                                {
+                                    "key": "size",
+                                    "value": "20"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Students",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students?q=Popescu&anStudiu=1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students"
+                            ],
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "Popescu"
+                                },
+                                {
+                                    "key": "anStudiu",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Student",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Student",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nume\": \"Marinescu\",\n  \"prenume\": \"Dan\",\n  \"email\": \"dan.marinescu@student.edu\",\n  \"telefon\": \"0721999888\",\n  \"anStudiu\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Student",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nume\": \"Marinescu\",\n  \"prenume\": \"Daniel\",\n  \"email\": \"daniel.marinescu@student.edu\",\n  \"telefon\": \"0721999888\",\n  \"anStudiu\": 3\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Student",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/students/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "students",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Courses",
+            "item": [
+                {
+                    "name": "List Courses",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Filter by Semester",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses?semester=1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses"
+                            ],
+                            "query": [
+                                {
+                                    "key": "semester",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Course",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"denumire\": \"Machine Learning\",\n  \"profesorTitular\": \"Prof. Dr. Ion Popescu\",\n  \"nrCredite\": 6,\n  \"semester\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/courses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "courses"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Enrollments",
+            "item": [
+                {
+                    "name": "List Enrollments",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/enrollments",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "enrollments"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Enrollment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"studentId\": 1,\n  \"courseId\": 3,\n  \"notaFinala\": null\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/enrollments",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "enrollments"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Grade",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"studentId\": 1,\n  \"courseId\": 1,\n  \"notaFinala\": 9.50\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/enrollments/1/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "enrollments",
+                                "1",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Attendance",
+            "item": [
+                {
+                    "name": "List Attendance",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/attendance",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "attendance"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Statistics",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/attendance/stats",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "attendance",
+                                "stats"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Attendance",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"studentId\": 1,\n  \"courseId\": 1,\n  \"data\": \"2024-12-18\",\n  \"semester\": 1,\n  \"status\": \"prezent\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/attendance",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "attendance"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Users (Admin)",
+            "item": [
+                {
+                    "name": "List Users",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"enabled\": true,\n  \"roles\": [\"ROLE_PROFESSOR\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Audit (Admin)",
+            "item": [
+                {
+                    "name": "List Audit Logs",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/audit",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "audit"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Export",
+            "item": [
+                {
+                    "name": "Export Students CSV",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/export/csv/students",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "export",
+                                "csv",
+                                "students"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Export Courses CSV",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/export/csv/courses",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "export",
+                                "csv",
+                                "courses"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Export Attendance CSV",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/export/csv/attendance",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "export",
+                                "csv",
+                                "attendance"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Health",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/actuator/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "actuator",
+                                "health"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080"
+        }
+    ]
+}

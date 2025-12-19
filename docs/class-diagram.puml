@@ -1,0 +1,215 @@
+@startuml Admin Zone Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor LightYellow
+    BorderColor Black
+}
+
+package "controller" {
+    class AuthController {
+        +getCurrentUser(): ResponseEntity
+        +login(): ResponseEntity
+        +logout(): ResponseEntity
+    }
+    
+    class StudentController {
+        +findAll(): ResponseEntity
+        +findById(): ResponseEntity
+        +create(): ResponseEntity
+        +update(): ResponseEntity
+        +delete(): ResponseEntity
+    }
+    
+    class CourseController {
+        +findAll(): ResponseEntity
+        +findById(): ResponseEntity
+        +create(): ResponseEntity
+        +update(): ResponseEntity
+        +delete(): ResponseEntity
+    }
+    
+    class EnrollmentController {
+        +findAll(): ResponseEntity
+        +findById(): ResponseEntity
+        +create(): ResponseEntity
+        +update(): ResponseEntity
+        +delete(): ResponseEntity
+    }
+    
+    class AttendanceController {
+        +findAll(): ResponseEntity
+        +search(): ResponseEntity
+        +getStatistics(): ResponseEntity
+        +create(): ResponseEntity
+        +delete(): ResponseEntity
+    }
+    
+    class UserController {
+        +findAll(): ResponseEntity
+        +create(): ResponseEntity
+        +update(): ResponseEntity
+        +delete(): ResponseEntity
+    }
+    
+    class AuditController {
+        +findAll(): ResponseEntity
+        +findByUsername(): ResponseEntity
+    }
+    
+    class ExportController {
+        +exportCsv(): void
+    }
+}
+
+package "service" {
+    class StudentService {
+        -studentRepository: StudentRepository
+        -auditService: AuditService
+        +findAll(): PageResponse
+        +findById(): StudentResponse
+        +create(): StudentResponse
+        +update(): StudentResponse
+        +delete(): void
+    }
+    
+    class CourseService {
+        -courseRepository: CourseRepository
+        -auditService: AuditService
+    }
+    
+    class EnrollmentService {
+        -enrollmentRepository: EnrollmentRepository
+        +create(): EnrollmentResponse
+    }
+    
+    class AttendanceService {
+        -maxAttendancePerSemester: int
+        +create(): AttendanceResponse
+        +getStatistics(): List
+    }
+    
+    class UserService {
+        -passwordEncoder: PasswordEncoder
+        +create(): UserResponse
+    }
+    
+    class AuditService {
+        +log(): void
+        +logAuth(): void
+    }
+    
+    class ExportService {
+        +exportStudentsCsv(): void
+        +exportCoursesCsv(): void
+    }
+}
+
+package "repository" {
+    interface StudentRepository {
+        +search(): Page
+        +findByEmail(): Optional
+    }
+    
+    interface CourseRepository {
+        +search(): Page
+        +findBySemester(): Page
+    }
+    
+    interface EnrollmentRepository {
+        +findAllWithDetails(): Page
+    }
+    
+    interface AttendanceRepository {
+        +countByStudentAndCourseAndSemester(): long
+        +getStatistics(): List
+    }
+    
+    interface UserRepository {
+        +findByUsername(): Optional
+    }
+    
+    interface AuditLogRepository
+}
+
+package "entity" {
+    class Student {
+        -id: Long
+        -nume: String
+        -prenume: String
+        -email: String
+        -telefon: String
+        -anStudiu: Integer
+    }
+    
+    class Course {
+        -id: Long
+        -denumire: String
+        -profesorTitular: String
+        -nrCredite: Integer
+        -semester: Integer
+    }
+    
+    class Enrollment {
+        -id: EnrollmentId
+        -notaFinala: BigDecimal
+    }
+    
+    class Attendance {
+        -id: Long
+        -data: LocalDate
+        -semester: Integer
+        -status: String
+    }
+    
+    class User {
+        -username: String
+        -password: String
+        -enabled: Boolean
+    }
+    
+    class Authority {
+        -id: Long
+        -authority: String
+    }
+    
+    class AuditLog {
+        -id: Long
+        -action: String
+        -entity: String
+    }
+}
+
+' Controller -> Service
+StudentController --> StudentService
+CourseController --> CourseService
+EnrollmentController --> EnrollmentService
+AttendanceController --> AttendanceService
+UserController --> UserService
+AuditController --> AuditService
+ExportController --> ExportService
+
+' Service -> Repository
+StudentService --> StudentRepository
+CourseService --> CourseRepository
+EnrollmentService --> EnrollmentRepository
+AttendanceService --> AttendanceRepository
+UserService --> UserRepository
+AuditService --> AuditLogRepository
+
+' Service -> AuditService
+StudentService --> AuditService
+CourseService --> AuditService
+EnrollmentService --> AuditService
+AttendanceService --> AuditService
+UserService --> AuditService
+
+' Entity relationships
+Student "1" -- "*" Enrollment
+Course "1" -- "*" Enrollment
+Student "1" -- "*" Attendance
+Course "1" -- "*" Attendance
+User "1" -- "*" Authority
+User "1" -- "*" AuditLog
+
+@enduml

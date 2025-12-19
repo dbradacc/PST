@@ -1,0 +1,82 @@
+@startuml Admin Zone Use Case Diagram
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Admin" as admin
+actor "Secretary" as secretary
+actor "Professor" as professor
+
+rectangle "Admin Zone System" {
+    usecase "Login" as UC1
+    usecase "Logout" as UC2
+    usecase "View Students" as UC3
+    usecase "Create/Edit Student" as UC4
+    usecase "Delete Student" as UC5
+    usecase "View Courses" as UC6
+    usecase "Create/Edit Course" as UC7
+    usecase "Delete Course" as UC8
+    usecase "View Enrollments" as UC9
+    usecase "Create/Edit Enrollment" as UC10
+    usecase "Delete Enrollment" as UC11
+    usecase "View Attendance" as UC12
+    usecase "Create/Edit Attendance" as UC13
+    usecase "Delete Attendance" as UC14
+    usecase "View Attendance Stats" as UC15
+    usecase "Manage Users" as UC16
+    usecase "View Audit Log" as UC17
+    usecase "Export CSV" as UC18
+}
+
+' All users can authenticate
+admin --> UC1
+admin --> UC2
+secretary --> UC1
+secretary --> UC2
+professor --> UC1
+professor --> UC2
+
+' View permissions (all roles)
+admin --> UC3
+admin --> UC6
+admin --> UC9
+admin --> UC12
+admin --> UC15
+admin --> UC18
+
+secretary --> UC3
+secretary --> UC6
+secretary --> UC9
+secretary --> UC12
+secretary --> UC15
+secretary --> UC18
+
+professor --> UC3
+professor --> UC6
+professor --> UC9
+professor --> UC12
+professor --> UC15
+professor --> UC18
+
+' Create/Edit (admin + secretary)
+admin --> UC4
+admin --> UC7
+admin --> UC10
+admin --> UC13
+
+secretary --> UC4
+secretary --> UC7
+secretary --> UC10
+secretary --> UC13
+
+' Delete (admin only)
+admin --> UC5
+admin --> UC8
+admin --> UC11
+admin --> UC14
+
+' Admin only
+admin --> UC16
+admin --> UC17
+
+@enduml
