@@ -12,17 +12,17 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/export")
 @RequiredArgsConstructor
-@Tag(name = "Export", description = "Export CSV")
+@Tag(name = "Export", description = "Export CSV și PDF")
 public class ExportController {
 
     private final ExportService exportService;
 
-    @Operation(summary = "Export CSV pentru tipul specificat")
+    @Operation(summary = "Export CSV pentru tipul specificat (students, courses, etc.)")
     @GetMapping("/csv/{type}")
     public void exportCsv(
             @PathVariable String type,
             HttpServletResponse response) throws IOException {
-        
+
         switch (type.toLowerCase()) {
             case "students":
                 exportService.exportStudentsCsv(response);
@@ -37,8 +37,17 @@ public class ExportController {
                 exportService.exportEnrollmentsCsv(response);
                 break;
             default:
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, 
+                response.sendError(HttpServletResponse.SC_NOT_FOUND,
                         "Tip export necunoscut: " + type);
         }
+    }
+
+    // --- METODA NOUĂ PENTRU PDF ---
+    @Operation(summary = "Generează Foaie Matricolă (PDF) pentru un student")
+    @GetMapping("/pdf/student/{id}")
+    public void exportStudentPdf(
+            @PathVariable Long id,
+            HttpServletResponse response) throws IOException {
+        exportService.exportTranscriptPdf(id, response);
     }
 }
