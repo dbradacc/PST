@@ -21,7 +21,7 @@ public class StudentRequest {
     @Email(message = "Email-ul trebuie să fie valid")
     private String email;
 
-    @Size(max = 20, message = "Telefonul nu poate depăși 20 caractere")
+    @Size(max = 10, message = "Telefonul nu poate depăși 10 caractere")
     private String telefon;
 
     @NotNull(message = "Anul de studiu este obligatoriu")
