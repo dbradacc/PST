@@ -14,6 +14,7 @@ import {
     Chip,
     InputAdornment,
     MenuItem,
+    Tooltip // Adăugat pentru tooltip buton PDF
 } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import {
@@ -21,6 +22,7 @@ import {
     Edit as EditIcon,
     Delete as DeleteIcon,
     Search as SearchIcon,
+    PictureAsPdf as PictureAsPdfIcon // Adăugat iconița PDF
 } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,11 +32,15 @@ import { studentsApi } from '../api/client';
 import { useAuth } from '../auth';
 import type { Student, StudentRequest } from '../types';
 
+// --- MODIFICARE 1: Schema de validare strictă ---
 const studentSchema = z.object({
     nume: z.string().min(2, 'Minim 2 caractere').max(100),
     prenume: z.string().min(2, 'Minim 2 caractere').max(100),
     email: z.string().email('Email invalid'),
-    telefon: z.string().optional(),
+    // Telefon fix 10 cifre
+    telefon: z.string()
+        .regex(/^\d+$/, 'Telefonul trebuie să conțină doar cifre')
+        .length(10, 'Telefonul trebuie să aibă exact 10 cifre'),
     anStudiu: z.number().min(1).max(6),
 });
 
@@ -50,9 +56,11 @@ export const StudentsPage: React.FC = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
+    // --- MODIFICARE 2: Configurare useForm cu mode: 'onSubmit' ---
     const { control, handleSubmit, reset, formState: { errors } } = useForm<StudentRequest>({
         resolver: zodResolver(studentSchema),
         defaultValues: { nume: '', prenume: '', email: '', telefon: '', anStudiu: 1 },
+        mode: 'onSubmit' // IMPORTANT: Validează doar când apeși butonul
     });
 
     const { data, isLoading } = useQuery({
@@ -125,11 +133,23 @@ export const StudentsPage: React.FC = () => {
         reset();
     };
 
-    const onSubmit = (formData: StudentRequest) => {
+    // --- MODIFICARE 3: Separare logica Submit Valid vs Invalid ---
+
+    // Se execută doar dacă datele sunt CORECTE
+    const onValidSubmit = (formData: StudentRequest) => {
         if (selectedStudent) {
             updateMutation.mutate({ id: selectedStudent.id, data: formData });
         } else {
             createMutation.mutate(formData);
+        }
+    };
+
+    // Se execută dacă datele sunt GREȘITE (apare mesaj sus)
+    const onInvalidSubmit = (errors: any) => {
+        if (errors.telefon) {
+            enqueueSnackbar(errors.telefon.message, { variant: 'error' });
+        } else {
+            enqueueSnackbar('Verificați formularul pentru erori!', { variant: 'error' });
         }
     };
 
@@ -144,6 +164,7 @@ export const StudentsPage: React.FC = () => {
         }
     };
 
+    // --- MODIFICARE 4: Adăugare buton PDF în coloane ---
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'nume', headerName: 'Nume', flex: 1 },
@@ -159,10 +180,21 @@ export const StudentsPage: React.FC = () => {
         {
             field: 'actions',
             headerName: 'Acțiuni',
-            width: 120,
+            width: 150, // Lățime mărită pentru a încăpea 3 butoane
             sortable: false,
             renderCell: (params) => (
                 <Box>
+                    {/* Buton PDF - Foaie Matricolă */}
+                    <Tooltip title="Descarcă Foaie Matricolă">
+                        <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => window.open(`http://localhost/api/export/pdf/student/${params.row.id}`, '_blank')}
+                        >
+                            <PictureAsPdfIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
+
                     {canCreate && (
                         <IconButton size="small" onClick={() => handleOpenEdit(params.row)}>
                             <EditIcon fontSize="small" />
@@ -233,7 +265,8 @@ export const StudentsPage: React.FC = () => {
 
             {/* Create/Edit Dialog */}
             <Dialog open={dialogOpen} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                {/* --- MODIFICARE 5: Formularul folosește ambele funcții de submit --- */}
+                <form onSubmit={handleSubmit(onValidSubmit, onInvalidSubmit)}>
                     <DialogTitle>{selectedStudent ? 'Editează Student' : 'Adaugă Student'}</DialogTitle>
                     <DialogContent>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
@@ -251,7 +284,7 @@ export const StudentsPage: React.FC = () => {
                             )} />
                             <Controller name="anStudiu" control={control} render={({ field }) => (
                                 <TextField {...field} select label="An Studiu" error={!!errors.anStudiu} helperText={errors.anStudiu?.message} fullWidth
-                                    onChange={(e) => field.onChange(Number(e.target.value))}>
+                                           onChange={(e) => field.onChange(Number(e.target.value))}>
                                     {[1, 2, 3, 4, 5, 6].map((an) => (
                                         <MenuItem key={an} value={an}>Anul {an}</MenuItem>
                                     ))}
