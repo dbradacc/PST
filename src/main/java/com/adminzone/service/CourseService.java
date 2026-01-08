@@ -53,7 +53,7 @@ public class CourseService {
                 .denumire(request.getDenumire())
                 .profesorTitular(request.getProfesorTitular())
                 .nrCredite(request.getNrCredite())
-                .semester(request.getSemester())
+                .semester(request.getSemestru())
                 .build();
 
         course = courseRepository.save(course);
@@ -70,7 +70,7 @@ public class CourseService {
         course.setDenumire(request.getDenumire());
         course.setProfesorTitular(request.getProfesorTitular());
         course.setNrCredite(request.getNrCredite());
-        course.setSemester(request.getSemester());
+        course.setSemester(request.getSemestru());
 
         course = courseRepository.save(course);
         auditService.log("UPDATE", "Course", id, request);
