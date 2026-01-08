@@ -55,6 +55,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())  // Disable CSRF for REST API
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/courses/**").permitAll()
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
@@ -77,9 +78,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/students/**", "/api/courses/**", 
                         "/api/enrollments/**", "/api/attendance/**")
                     .hasAnyRole("ADMIN", "SECRETARY")
-                .requestMatchers(HttpMethod.PUT, "/api/students/**", "/api/courses/**", 
-                        "/api/enrollments/**", "/api/attendance/**")
-                    .hasAnyRole("ADMIN", "SECRETARY")
+                .requestMatchers(HttpMethod.PUT, "/api/courses/**").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/api/students/**", "/api/courses/**", 
                         "/api/enrollments/**", "/api/attendance/**")
                     .hasAnyRole("ADMIN", "SECRETARY")
