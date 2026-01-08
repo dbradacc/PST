@@ -81,15 +81,12 @@ public class UserService {
         }
 
         // Update roles
-        if (request.getRoles() != null && !request.getRoles().isEmpty()) {
+        if (request.getRoles() != null) {
             user.getAuthorities().clear();
+            userRepository.saveAndFlush(user);
             for (String role : request.getRoles()) {
                 String normalizedRole = normalizeRole(role);
-                Authority authority = Authority.builder()
-                        .user(user)
-                        .authority(normalizedRole)
-                        .build();
-                user.getAuthorities().add(authority);
+                user.addAuthority(normalizedRole);
             }
         }
 
