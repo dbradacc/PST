@@ -1,5 +1,7 @@
 package com.adminzone.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -22,7 +24,8 @@ public class CourseRequest {
     private Integer nrCredite;
 
     @NotNull(message = "Semestrul este obligatoriu")
-    @Min(value = 1, message = "Semestrul trebuie să fie 1 sau 2")
-    @Max(value = 2, message = "Semestrul trebuie să fie 1 sau 2")
-    private Integer semester;
+    @Min(1)
+    @Max(2)
+    @JsonProperty("semester")
+    private Integer semestru;
 }
