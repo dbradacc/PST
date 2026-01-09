@@ -189,7 +189,7 @@ export const StudentsPage: React.FC = () => {
                         <IconButton
                             size="small"
                             color="primary"
-                            onClick={() => window.open(`http://localhost/api/export/pdf/student/${params.row.id}`, '_blank')}
+                            onClick={() => window.open(`/api/export/pdf/student/${params.row.id}`, '_blank')}
                         >
                             <PictureAsPdfIcon fontSize="small" />
                         </IconButton>
